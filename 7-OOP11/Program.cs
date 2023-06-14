@@ -1,4 +1,6 @@
-﻿namespace OOP11
+using System;
+
+namespace OOP11
 {
     internal class Program
     {
@@ -46,12 +48,12 @@
 
                     if (isSuccess)
                     {
-                        fish.AddPisce(name, year);                  
+                        fish.AddPisce(name, year);
                     }
                     else
                     {
                         fish.DescribeResult("Ошибка. Попробуйте ещё раз.", "Для продолжения нажмите любую клавишу...");
-                    }               
+                    }
                 }
                 else if (userInput == deleteFish)
                 {
@@ -64,7 +66,7 @@
                         {
                             fish.DescribeResult("Вы убрали рыбку из аквариума.", "Для продолжения нажмите любую клавишу...");
 
-                            fish.SkippingTime();
+                            fish.SkippingTime(out pisce);
                         }
                     }
                     else
@@ -72,20 +74,27 @@
                         fish.DescribeResult("Ошибка. Попробуйте ещё раз.", "Для продолжения нажмите любую клавишу...");
                     }
                 }
-                else if(userInput == skipDay)
+                else if (userInput == skipDay)
                 {
-                    fish.SkippingTime();
+                    if (fish.SkippingTime(out Fish pisce))
+                    {
+                        fish.DescribeResult("Прошло время. Рыбки стали взрослее...", "Для продолжения нажмите любую клавишу...");
+                    }
+                    else
+                    {
+                        fish.DescribeResult($"Рыба - {pisce.Name} мертва.", "Для продолжения нажмите любую клавишу...");
 
-                    fish.DescribeResult("Прошло время. Рыбки стали взрослее...", "Для продолжения нажмите любую клавишу...");
+                        fish.DeletePisce(pisce);
+                    }
                 }
-                else if(userInput == exit)
+                else if (userInput == exit)
                 {
                     isWork = false;
                 }
                 else
                 {
                     fish.DescribeResult($"Ошибка. Введите {addFish}, {deleteFish}, {skipDay} или {exit}.", "Для продолжения нажмите любую клавишу...");
-                }               
+                }
             }
         }
     }
@@ -93,7 +102,7 @@
     class Fish
     {
         private List<Fish> _pisces = new List<Fish>();
-        private int _maximumYear = 10;
+        private int _maximumYear = 11;
 
         public Fish(string pisce, int year)
         {
@@ -120,7 +129,7 @@
             }
         }
 
-        public void DescribeResult(string initialDescription, string finalDescription)    
+        public void DescribeResult(string initialDescription, string finalDescription)
         {
             Console.WriteLine(initialDescription);
             Console.WriteLine(finalDescription);
@@ -128,25 +137,20 @@
             Console.Clear();
         }
 
-        public void SkippingTime()
+        public bool SkippingTime(out Fish fish)
         {
+            fish = null;
+
             int age = 1;
+            int pisce = 0;
 
             for (int i = 0; i < _pisces.Count; i++)
             {
-                int pisce = _pisces[i].Age;
-
-                if (pisce < _maximumYear)
-                {
-                    _pisces[i].Age += age;
-                }
-                else
-                {
-                    Console.WriteLine("Рыбка - " + _pisces[i].Name + " мертва.");
-
-                    DeletePisce(_pisces[i]);
-                }
+                fish = _pisces[i];
+                pisce = _pisces[i].Age += age;
             }
+
+            return pisce < _maximumYear;
         }
 
         public void AddPisce(string name, int year)
