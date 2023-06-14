@@ -137,6 +137,20 @@ namespace OOP11
             Console.Clear();
         }
 
+        public void AddPisce(string name, int year)
+        {
+            if (year < _maximumYear)
+            {
+                _pisces.Add(new Fish(name, year));
+
+                DescribeResult("Рыбка добавлена.", "Для продолжения нажмите любую клавишу...");
+            }
+            else
+            {
+                DescribeResult("Ошибка. Попробуйте ещё раз.", "Для продолжения нажмите любую клавишу...");
+            }
+        }
+
         public bool SkippingTime(out Fish fish)
         {
             fish = null;
@@ -151,20 +165,6 @@ namespace OOP11
             }
 
             return pisce < _maximumYear;
-        }
-
-        public void AddPisce(string name, int year)
-        {
-            if (year < _maximumYear)
-            {
-                _pisces.Add(new Fish(name, year));
-
-                DescribeResult("Рыбка добавлена.", "Для продолжения нажмите любую клавишу...");
-            }
-            else
-            {
-                DescribeResult("Ошибка. Попробуйте ещё раз.", "Для продолжения нажмите любую клавишу...");
-            }
         }
 
         public bool DeletePisce(Fish index)
