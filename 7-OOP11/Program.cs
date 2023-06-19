@@ -151,7 +151,7 @@ namespace OOP11
         {
             for (int i = 0; i < _fish.Count; i++)
             {
-                _fish[i].ShowInfoFish();
+                _fish[i].ShowInfoWhitebait();
             }
         }
 
@@ -221,7 +221,7 @@ namespace OOP11
 
         public int Age { get; private set; }
 
-        public void ShowInfoFish()
+        public void ShowInfoWhitebait()
         {
             Console.WriteLine($"{Name} - возраст {Age} лет");
         }
