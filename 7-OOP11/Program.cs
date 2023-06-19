@@ -45,7 +45,7 @@ namespace OOP11
                 }
                 else if (userInput == deleteFish)
                 {
-                    DeleteFish(userInput, deleteFish);
+                    RemoveFish(userInput, deleteFish);
                 }
                 else if (userInput == skipDay)
                 {
@@ -85,7 +85,7 @@ namespace OOP11
             }
         }
 
-        private void DeleteFish(string userInput, string deleteFish)
+        private void RemoveFish(string userInput, string deleteFish)
         {
             if (userInput == deleteFish)
             {
@@ -94,7 +94,7 @@ namespace OOP11
 
                 if (TryGetFish(out Fish smallFish, appellation))
                 {
-                    if (TryDeleteFish(smallFish))
+                    if (TryRemoveFish(smallFish))
                     {
                         DescribeResult("Вы убрали рыбку из аквариума.", "Для продолжения нажмите любую клавишу...");
 
@@ -116,7 +116,7 @@ namespace OOP11
 
             if (TryFindDeadFish(out fish))
             {
-                TryDeleteFish(fish);
+                TryRemoveFish(fish);
             }
         }
 
@@ -183,7 +183,7 @@ namespace OOP11
             return false;
         }
 
-        private bool TryDeleteFish(Fish index)
+        private bool TryRemoveFish(Fish index)
         {
             return _fish.Remove(index);
         }
