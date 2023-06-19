@@ -1,5 +1,3 @@
-using System;
-
 namespace OOP11
 {
     internal class Program
@@ -14,10 +12,15 @@ namespace OOP11
 
     class Aquarium
     {
+        private List<Fish> _fish = new List<Fish>();
+
+        public Aquarium() 
+        {
+            CreateFish();
+        }
+
         public void Work()
         {
-            Fish fish = new Fish();
-
             bool isWork = true;
 
             string skipDay = "1";
@@ -27,7 +30,7 @@ namespace OOP11
 
             while (isWork)
             {
-                fish.ShowInfoPisces();
+                ShowFishbowl();
 
                 Console.WriteLine($"\nДля пропуска дня введите - {skipDay}.");
                 Console.WriteLine($"\nДобавить рыбку в аквариум введите - {addFish}.");
@@ -38,54 +41,15 @@ namespace OOP11
 
                 if (userInput == addFish)
                 {
-                    Console.Write("Введите название рыбки - ");
-                    string name = Console.ReadLine();
-
-                    Console.Write("Введите возраст рыбки - ");
-                    string age = Console.ReadLine();
-
-                    bool isSuccess = int.TryParse(age, out int year);
-
-                    if (isSuccess)
-                    {
-                        fish.AddPisce(name, year);
-                    }
-                    else
-                    {
-                        fish.DescribeResult("Ошибка. Попробуйте ещё раз.", "Для продолжения нажмите любую клавишу...");
-                    }
+                    AppendFish(userInput, addFish);
                 }
                 else if (userInput == deleteFish)
                 {
-                    Console.Write("\nВведите название рыбки - ");
-                    string appellation = Console.ReadLine();
-
-                    if (fish.TryGetPisce(out Fish pisce, appellation))
-                    {
-                        if (fish.DeletePisce(pisce))
-                        {
-                            fish.DescribeResult("Вы убрали рыбку из аквариума.", "Для продолжения нажмите любую клавишу...");
-
-                            fish.SkippingTime(out pisce);
-                        }
-                    }
-                    else
-                    {
-                        fish.DescribeResult("Ошибка. Попробуйте ещё раз.", "Для продолжения нажмите любую клавишу...");
-                    }
+                    DeleteFish(userInput, deleteFish);
                 }
                 else if (userInput == skipDay)
                 {
-                    if (fish.SkippingTime(out Fish pisce))
-                    {
-                        fish.DescribeResult("Прошло время. Рыбки стали взрослее...", "Для продолжения нажмите любую клавишу...");
-                    }
-                    else
-                    {
-                        fish.DescribeResult($"Рыба - {pisce.Name} мертва.", "Для продолжения нажмите любую клавишу...");
-
-                        fish.DeletePisce(pisce);
-                    }
+                    MissTime();
                 }
                 else if (userInput == exit)
                 {
@@ -93,43 +57,70 @@ namespace OOP11
                 }
                 else
                 {
-                    fish.DescribeResult($"Ошибка. Введите {addFish}, {deleteFish}, {skipDay} или {exit}.", "Для продолжения нажмите любую клавишу...");
+                    Console.Clear();
                 }
             }
         }
-    }
 
-    class Fish
-    {
-        private List<Fish> _pisces = new List<Fish>();
-        private int _maximumYear = 11;
-
-        public Fish(string pisce, int year)
+        private void AppendFish(string userInput, string addFish)
         {
-            Name = pisce;
-            Age = year;
-        }
-
-        public Fish()
-        {
-            CreatePisce();
-        }
-
-        public string Name { get; private set; }
-
-        public int Age { get; private set; }
-
-        public void ShowInfoPisces()
-        {
-            Console.WriteLine("Рыбы в аквариуме: ");
-
-            for (int i = 0; i < _pisces.Count; i++)
+            if (userInput == addFish)
             {
-                Console.WriteLine("Имя - " + _pisces[i].Name + ", Здоровье - " + _pisces[i].Age + " лет.");
+                Console.Write("Введите название рыбки - ");
+                string name = Console.ReadLine();
+
+                Console.Write("Введите возраст рыбки - ");
+                string age = Console.ReadLine();
+
+                bool isSuccess = int.TryParse(age, out int year);
+
+                if (isSuccess)
+                {
+                    AddFish(name, year);
+                }
+                else
+                {
+                    DescribeResult("Ошибка. Попробуйте ещё раз.", "Для продолжения нажмите любую клавишу...");
+                }
             }
         }
 
-        public void DescribeResult(string initialDescription, string finalDescription)
+        private void DeleteFish(string userInput, string deleteFish)
+        {
+            if (userInput == deleteFish)
+            {
+                Console.Write("\nВведите название рыбки - ");
+                string appellation = Console.ReadLine();
+
+                if (TryGetFish(out Fish smallFish, appellation))
+                {
+                    if (TryDeleteFish(smallFish))
+                    {
+                        DescribeResult("Вы убрали рыбку из аквариума.", "Для продолжения нажмите любую клавишу...");
+
+                        SkipTime(out smallFish);
+                    }
+                }
+                else
+                {
+                    DescribeResult("Ошибка. Попробуйте ещё раз.", "Для продолжения нажмите любую клавишу...");
+                }
+            }
+        }
+
+        private void MissTime()
+        {
+            SkipTime(out Fish fish);
+
+            DescribeResult("Прошло время. Рыбки стали взрослее...", "Для продолжения нажмите любую клавишу...");
+
+            if (TryFindDeadFish(out fish))
+            {
+                TryDeleteFish(fish);
+            }
+        }
+
+        private void DescribeResult(string initialDescription, string finalDescription)
         {
             Console.WriteLine(initialDescription);
             Console.WriteLine(finalDescription);
@@ -137,50 +128,54 @@ namespace OOP11
             Console.Clear();
         }
 
-        public void AddPisce(string name, int year)
+        private void AddFish(string name, int year)
         {
-            if (year < _maximumYear)
-            {
-                _pisces.Add(new Fish(name, year));
+            _fish.Add(new Fish(name, year));
 
-                DescribeResult("Рыбка добавлена.", "Для продолжения нажмите любую клавишу...");
-            }
-            else
-            {
-                DescribeResult("Ошибка. Попробуйте ещё раз.", "Для продолжения нажмите любую клавишу...");
-            }
+            DescribeResult("Рыбка добавлена.", "Для продолжения нажмите любую клавишу...");
         }
 
-        public bool SkippingTime(out Fish fish)
+        private void SkipTime(out Fish fish)
         {
             fish = null;
 
-            int age = 1;
-            int pisce = 0;
-
-            for (int i = 0; i < _pisces.Count; i++)
+            for (int i = 0; i < _fish.Count; i++)
             {
-                fish = _pisces[i];
-                pisce = _pisces[i].Age += age;
+                fish = _fish[i];
+
+                _fish[i].AddYear();
             }
-
-            return pisce < _maximumYear;
         }
 
-        public bool DeletePisce(Fish index)
+        private void ShowFishbowl()
         {
-            return _pisces.Remove(index);
+            for (int i = 0; i < _fish.Count; i++)
+            {
+                _fish[i].ShowInfoFish();
+            }
         }
 
-        public bool TryGetPisce(out Fish fish, string userInput)
+        private void CreateFish()
+        {
+            _fish.Add(new Fish(nameof(Barracuda), 1));
+            _fish.Add(new Fish(nameof(Piranha), 2));
+            _fish.Add(new Fish(nameof(Pike), 3));
+            _fish.Add(new Fish(nameof(Catfish), 4));
+            _fish.Add(new Fish(nameof(Salmon), 5));
+        }
+
+        private bool TryFindDeadFish(out Fish fish)
         {
             fish = null;
 
-            for (int i = 0; i < _pisces.Count; i++)
+            for (int i = 0; i < _fish.Count; i++)
             {
-                if (userInput.ToLower() == _pisces[i].Name.ToLower())
+                fish = _fish[i];
+
+                if (_fish[i].IsDead == false)
                 {
-                    fish = _pisces[i];
+                    DescribeResult($"Рыбка {fish.Name} мертва.", "Для продолжения нажмите любую клавишу...");
+
                     return true;
                 }
             }
@@ -188,13 +183,52 @@ namespace OOP11
             return false;
         }
 
-        private void CreatePisce()
+        private bool TryDeleteFish(Fish index)
         {
-            _pisces.Add(new Fish(nameof(Barracuda), 1));
-            _pisces.Add(new Fish(nameof(Piranha), 2));
-            _pisces.Add(new Fish(nameof(Pike), 3));
-            _pisces.Add(new Fish(nameof(Catfish), 4));
-            _pisces.Add(new Fish(nameof(Salmon), 5));
+            return _fish.Remove(index);
+        }
+
+        private bool TryGetFish(out Fish fish, string userInput)
+        {
+            fish = null;
+
+            for (int i = 0; i < _fish.Count; i++)
+            {
+                if (userInput.ToLower() == _fish[i].Name.ToLower())
+                {
+                    fish = _fish[i];
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    class Fish
+    {
+        private int _maximumYear = 10;
+
+        public Fish(string appellation, int year)
+        {
+            Name = appellation;
+            Age = year;
+        }
+
+        public bool IsDead => Age <= _maximumYear;
+
+        public string Name { get; private set; }
+
+        public int Age { get; private set; }
+
+        public void ShowInfoFish()
+        {
+            Console.WriteLine($"{Name} - возраст {Age} лет");
+        }
+
+        public void AddYear()
+        {
+            Age++;
         }
     }
 
