@@ -163,8 +163,8 @@ namespace OOP11
         {
             _fish.Add(new Fish(nameof(Barracuda), 1));
             _fish.Add(new Fish(nameof(Piranha), 10));
-            _fish.Add(new Fish(nameof(Pike), 10));
-            _fish.Add(new Fish(nameof(Catfish), 10));
+            _fish.Add(new Fish(nameof(Pike), 9));
+            _fish.Add(new Fish(nameof(Catfish), 9));
             _fish.Add(new Fish(nameof(Salmon), 10));
         }
 
