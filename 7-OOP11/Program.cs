@@ -113,11 +113,6 @@ namespace OOP11
             SkipTime(out Fish fish);
 
             DescribeResult("Прошло время. Рыбки стали взрослее...", "Для продолжения нажмите любую клавишу...");
-
-            if (TryFindDeadFish(out fish))
-            {
-                TryRemoveFish(fish);
-            }
         }
 
         private void DescribeResult(string initialDescription, string finalDescription)
@@ -144,6 +139,15 @@ namespace OOP11
                 fish = _fish[i];
 
                 _fish[i].AddYear();
+
+                if (_fish[i].IsDead == false)
+                {
+                    DescribeResult($"Рыбка {fish.Name} мертва.", "Для продолжения нажмите любую клавишу...");
+
+                    TryRemoveFish(fish);
+
+                    i--;
+                }
             }
         }
 
@@ -158,29 +162,10 @@ namespace OOP11
         private void CreateFish()
         {
             _fish.Add(new Fish(nameof(Barracuda), 1));
-            _fish.Add(new Fish(nameof(Piranha), 2));
-            _fish.Add(new Fish(nameof(Pike), 3));
-            _fish.Add(new Fish(nameof(Catfish), 4));
-            _fish.Add(new Fish(nameof(Salmon), 5));
-        }
-
-        private bool TryFindDeadFish(out Fish fish)
-        {
-            fish = null;
-
-            for (int i = 0; i < _fish.Count; i++)
-            {
-                fish = _fish[i];
-
-                if (_fish[i].IsDead == false)
-                {
-                    DescribeResult($"Рыбка {fish.Name} мертва.", "Для продолжения нажмите любую клавишу...");
-
-                    return true;
-                }
-            }
-
-            return false;
+            _fish.Add(new Fish(nameof(Piranha), 10));
+            _fish.Add(new Fish(nameof(Pike), 10));
+            _fish.Add(new Fish(nameof(Catfish), 10));
+            _fish.Add(new Fish(nameof(Salmon), 10));
         }
 
         private bool TryRemoveFish(Fish index)
