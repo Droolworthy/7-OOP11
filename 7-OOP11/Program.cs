@@ -136,15 +136,13 @@ namespace OOP11
 
         private void RemoveDeadFish()
         {
-            for (int i = 0; i < _fish.Count; i++)
+            for (int i = _fish.Count - 1; i >= 0; i--)
             {
                 if (_fish[i].IsDead == false)
                 {
                     DescribeResult($"Рыбка {_fish[i].Name} мертва.", "Для продолжения нажмите любую клавишу...");
 
                     _fish.RemoveAt(i);
-
-                    i--;
                 }
             }
         }
@@ -161,8 +159,8 @@ namespace OOP11
         {
             _fish.Add(new Fish(nameof(Barracuda), 1));
             _fish.Add(new Fish(nameof(Piranha), 2));
-            _fish.Add(new Fish(nameof(Pike), 3));
-            _fish.Add(new Fish(nameof(Catfish), 9));
+            _fish.Add(new Fish(nameof(Pike), 10));
+            _fish.Add(new Fish(nameof(Catfish), 10));
             _fish.Add(new Fish(nameof(Salmon), 10));
         }
 
