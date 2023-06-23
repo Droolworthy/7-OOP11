@@ -27,7 +27,7 @@ namespace OOP11
 
     class Aquarium
     {
-        private List<Animal> _fish = new List<Animal>();
+        private List<Animal> _fish;
 
         public Aquarium(List<Animal> fish)
         {
