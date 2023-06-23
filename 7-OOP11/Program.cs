@@ -4,7 +4,22 @@ namespace OOP11
     {
         static void Main(string[] args)
         {
-            Aquarium aquarium = new Aquarium();
+            List<Animal> animal = new List<Animal>();
+
+            Animal fish = new Fish("Барракуда", 1);
+
+            Animal piranha = fish.Clone("Пиранья", 2);
+            Animal pike = fish.Clone("Щука", 3);
+            Animal catfish = fish.Clone("Сом", 4);
+            Animal salmon = fish.Clone("Лосось", 5);
+
+            animal.Add(fish);
+            animal.Add(piranha);
+            animal.Add(pike);
+            animal.Add(catfish);
+            animal.Add(salmon);
+
+            Aquarium aquarium = new Aquarium(animal);
 
             aquarium.Work();
         }
@@ -12,11 +27,11 @@ namespace OOP11
 
     class Aquarium
     {
-        private List<Fish> _fish = new List<Fish>();
+        private List<Animal> _fish = new List<Animal>();
 
-        public Aquarium()
+        public Aquarium(List<Animal> fish)
         {
-            CreateFish();
+            _fish = fish;
         }
 
         public void Work()
@@ -87,7 +102,7 @@ namespace OOP11
             Console.Write("\nВведите название рыбки - ");
             string smallFish = Console.ReadLine();
 
-            if (TryGetFish(out Fish name, smallFish))
+            if (TryGetFish(out Animal name, smallFish))
             {
                 if (TryRemoveFish(name))
                 {
@@ -155,21 +170,12 @@ namespace OOP11
             }
         }
 
-        private void CreateFish()
-        {
-            _fish.Add(new Fish(nameof(Barracuda), 1));
-            _fish.Add(new Fish(nameof(Piranha), 2));
-            _fish.Add(new Fish(nameof(Pike), 10));
-            _fish.Add(new Fish(nameof(Catfish), 10));
-            _fish.Add(new Fish(nameof(Salmon), 10));
-        }
-
-        private bool TryRemoveFish(Fish index)
+        private bool TryRemoveFish(Animal index)
         {
             return _fish.Remove(index);
         }
 
-        private bool TryGetFish(out Fish fish, string userInput)
+        private bool TryGetFish(out Animal fish, string userInput)
         {
             fish = null;
 
@@ -186,11 +192,11 @@ namespace OOP11
         }
     }
 
-    class Fish
+    abstract class Animal
     {
         private int _maximumYear = 10;
 
-        public Fish(string appellation, int year)
+        public Animal(string appellation, int year)
         {
             Name = appellation;
             Age = year;
@@ -211,30 +217,17 @@ namespace OOP11
         {
             Age++;
         }
+
+        public abstract Animal Clone(string name, int age);
     }
 
-    class Barracuda : Fish
+    class Fish : Animal
     {
-        public Barracuda(string name, int health) : base(name, health) { }
-    }
+        public Fish(string appellation, int year) : base(appellation, year) { }
 
-    class Piranha : Fish
-    {
-        public Piranha(string name, int health) : base(name, health) { }
-    }
-
-    class Pike : Fish
-    {
-        public Pike(string name, int health) : base(name, health) { }
-    }
-
-    class Catfish : Fish
-    {
-        public Catfish(string name, int health) : base(name, health) { }
-    }
-
-    class Salmon : Fish
-    {
-        public Salmon(string name, int health) : base(name, health) { }
+        public override Animal Clone(string name, int age)
+        {
+            return new Fish(name, age);
+        }
     }
 }
