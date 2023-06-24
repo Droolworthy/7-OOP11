@@ -108,7 +108,7 @@ namespace OOP11
                 {
                     DescribeResult("Вы убрали рыбку из аквариума.", "Для продолжения нажмите любую клавишу...");
 
-                    SkipTime();
+                    GrowingUpFish();
                 }
             }
             else
@@ -119,7 +119,7 @@ namespace OOP11
 
         private void MissTime()
         {
-            SkipTime();
+            GrowingUpFish();
 
             RemoveDeadFish();
         }
@@ -139,7 +139,7 @@ namespace OOP11
             DescribeResult("Рыбка добавлена.", "Для продолжения нажмите любую клавишу...");
         }
 
-        private void SkipTime()
+        private void GrowingUpFish()
         {
             for (int i = 0; i < _fish.Count; i++)
             {
