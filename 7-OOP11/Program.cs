@@ -4,22 +4,7 @@ namespace OOP11
     {
         static void Main(string[] args)
         {
-            List<Animal> animal = new List<Animal>();
-
-            Animal fish = new Fish("Барракуда", 1);
-
-            Animal piranha = fish.Clone("Пиранья", 2);
-            Animal pike = fish.Clone("Щука", 3);
-            Animal catfish = fish.Clone("Сом", 4);
-            Animal salmon = fish.Clone("Лосось", 5);
-
-            animal.Add(fish);
-            animal.Add(piranha);
-            animal.Add(pike);
-            animal.Add(catfish);
-            animal.Add(salmon);
-
-            Aquarium aquarium = new Aquarium(animal);
+            Aquarium aquarium = new Aquarium();
 
             aquarium.Work();
         }
@@ -27,11 +12,11 @@ namespace OOP11
 
     class Aquarium
     {
-        private List<Animal> _fish;
+        private List<Fish> _fishes = new List<Fish>();
 
-        public Aquarium(List<Animal> fish)
+        public Aquarium()
         {
-            _fish = fish;
+            CreateFish();
         }
 
         public void Work()
@@ -85,9 +70,7 @@ namespace OOP11
             Console.Write("Введите возраст рыбки - ");
             string age = Console.ReadLine();
 
-            bool isSuccess = int.TryParse(age, out int year);
-
-            if (isSuccess)
+            if (int.TryParse(age, out int year))
             {
                 AddFish(name, year);
             }
@@ -99,21 +82,24 @@ namespace OOP11
 
         private void DeleteFish()
         {
-            Console.Write("\nВведите название рыбки - ");
-            string smallFish = Console.ReadLine();
-
-            if (TryGetFish(out Animal name, smallFish))
+            if (TryGetFish(out Fish fish))
             {
-                if (TryRemoveFish(name))
+                if (TryRemoveFish(fish))
                 {
                     DescribeResult("Вы убрали рыбку из аквариума.", "Для продолжения нажмите любую клавишу...");
-
-                    GrowingUpFish();
                 }
             }
             else
             {
                 DescribeResult("Ошибка. Попробуйте ещё раз.", "Для продолжения нажмите любую клавишу...");
+            }
+        }
+
+        private void ShowFishbowl()
+        {
+            for (int i = 0; i < _fishes.Count; i++)
+            {
+                _fishes[i].ShowInfoWhitebait();
             }
         }
 
@@ -134,16 +120,16 @@ namespace OOP11
 
         private void AddFish(string name, int year)
         {
-            _fish.Add(new Fish(name, year));
+            _fishes.Add(new Fish(name, year));
 
             DescribeResult("Рыбка добавлена.", "Для продолжения нажмите любую клавишу...");
         }
 
         private void GrowingUpFish()
         {
-            for (int i = 0; i < _fish.Count; i++)
+            for (int i = 0; i < _fishes.Count; i++)
             {
-                _fish[i].AddYear();
+                _fishes[i].AddYear();
             }
 
             DescribeResult("Прошло время. Рыбки стали взрослее...", "Для продолжения нажмите любую клавишу...");
@@ -151,39 +137,45 @@ namespace OOP11
 
         private void RemoveDeadFish()
         {
-            for (int i = _fish.Count - 1; i >= 0; i--)
+            for (int i = _fishes.Count - 1; i >= 0; i--)
             {
-                if (_fish[i].IsDead == false)
+                if (_fishes[i].IsDead == false)
                 {
-                    DescribeResult($"Рыбка {_fish[i].Name} мертва.", "Для продолжения нажмите любую клавишу...");
+                    DescribeResult($"Рыбка {_fishes[i].Name} мертва.", "Для продолжения нажмите любую клавишу...");
 
-                    _fish.RemoveAt(i);
+                    _fishes.RemoveAt(i);
                 }
             }
         }
 
-        private void ShowFishbowl()
+        private void CreateFish()
         {
-            for (int i = 0; i < _fish.Count; i++)
-            {
-                _fish[i].ShowInfoWhitebait();
-            }
+            _fishes.Add(new Fish("Пиранья", 1));
+            _fishes.Add(new Fish("Щука", 2));
+            _fishes.Add(new Fish("Осетр", 3));
+            _fishes.Add(new Fish("Вобла", 9));
+            _fishes.Add(new Fish("Тунец", 10));
+            _fishes.Add(new Fish("Пиранья", 8));
+            _fishes.Add(new Fish("Сом", 10));
         }
 
-        private bool TryRemoveFish(Animal index)
+        private bool TryRemoveFish(Fish index)
         {
-            return _fish.Remove(index);
+            return _fishes.Remove(index);
         }
 
-        private bool TryGetFish(out Animal fish, string userInput)
+        private bool TryGetFish(out Fish fish)
         {
             fish = null;
 
-            for (int i = 0; i < _fish.Count; i++)
+            Console.Write("\nВведите название рыбки - ");
+            string name = Console.ReadLine();
+
+            for (int i = 0; i < _fishes.Count; i++)
             {
-                if (userInput.ToLower() == _fish[i].Name.ToLower())
+                if (name.ToLower() == _fishes[i].Name.ToLower())
                 {
-                    fish = _fish[i];
+                    fish = _fishes[i];
                     return true;
                 }
             }
@@ -192,17 +184,17 @@ namespace OOP11
         }
     }
 
-    abstract class Animal
+    class Fish
     {
         private int _maximumYear = 10;
 
-        public Animal(string appellation, int year)
+        public Fish(string appellation, int year)
         {
             Name = appellation;
             Age = year;
         }
 
-        public bool IsDead => Age <= _maximumYear;
+        public bool IsDead => Age < _maximumYear;
 
         public string Name { get; private set; }
 
@@ -216,18 +208,6 @@ namespace OOP11
         public void AddYear()
         {
             Age++;
-        }
-
-        public abstract Animal Clone(string name, int age);
-    }
-
-    class Fish : Animal
-    {
-        public Fish(string appellation, int year) : base(appellation, year) { }
-
-        public override Animal Clone(string name, int age)
-        {
-            return new Fish(name, age);
         }
     }
 }
