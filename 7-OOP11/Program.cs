@@ -16,42 +16,42 @@ namespace OOP11
 
         public Aquarium()
         {
-            CreateFish();
+            CreateFishes();
         }
 
         public void Work()
         {
             bool isWork = true;
 
-            string skipDay = "1";
-            string addFish = "2";
-            string deleteFish = "3";
-            string exit = "выход";
+            const string CommandSkipDay = "1";
+            const string CommandAddFish = "2";
+            const string CommandDeleteFish = "3";
+            const string CommandExit = "4";
 
             while (isWork)
             {
                 ShowFishbowl();
 
-                Console.WriteLine($"\nДля пропуска дня введите - {skipDay}.");
-                Console.WriteLine($"\nДобавить рыбку в аквариум введите - {addFish}.");
-                Console.WriteLine($"\nУбрать рыбку из аквариума введите - {deleteFish}.");
-                Console.WriteLine($"\nВыйти из приложения введите - {exit}.");
+                Console.WriteLine($"\nДля пропуска дня введите - {CommandSkipDay}.");
+                Console.WriteLine($"\nДобавить рыбку в аквариум введите - {CommandAddFish}.");
+                Console.WriteLine($"\nУбрать рыбку из аквариума введите - {CommandDeleteFish}.");
+                Console.WriteLine($"\nВыйти из приложения введите - {CommandExit}.");
                 Console.Write("\nВвод: ");
                 string userInput = Console.ReadLine();
 
-                if (userInput == addFish)
+                if (userInput == CommandAddFish)
                 {
                     AppendFish();
                 }
-                else if (userInput == deleteFish)
+                else if (userInput == CommandDeleteFish)
                 {
                     DeleteFish();
                 }
-                else if (userInput == skipDay)
+                else if (userInput == CommandSkipDay)
                 {
                     MissTime();
                 }
-                else if (userInput == exit)
+                else if (userInput == CommandExit)
                 {
                     isWork = false;
                 }
@@ -107,7 +107,7 @@ namespace OOP11
         {
             GrowingUpFish();
 
-            RemoveDeadFish();
+            RemoveDeadFishes();
         }
 
         private void DescribeResult(string initialDescription, string finalDescription)
@@ -135,7 +135,7 @@ namespace OOP11
             DescribeResult("Прошло время. Рыбки стали взрослее...", "Для продолжения нажмите любую клавишу...");
         }
 
-        private void RemoveDeadFish()
+        private void RemoveDeadFishes()
         {
             for (int i = _fishes.Count - 1; i >= 0; i--)
             {
@@ -148,7 +148,7 @@ namespace OOP11
             }
         }
 
-        private void CreateFish()
+        private void CreateFishes()
         {
             _fishes.Add(new Fish("Пиранья", 1));
             _fishes.Add(new Fish("Щука", 2));
